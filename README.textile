@@ -1,0 +1,45 @@
+h1. fiveruns.dash.django package
+
+FiveRuns Dash recipe for Django, packaged as a Django App
+* See http://dash.fiveruns.com
+
+h2. Status
+
+This package is currently under active development, and is not ready for production.  It is being tested against Django 1.1 (SVN) and @manage.py runserver@, and has not been tried with @WSGI@, @mod_python@, or other production methods.
+
+At this point the package is being released purely as a technical preview (feedback being highly sought).
+
+h2. Installation
+
+Standard installation via @setuptools@ (and @ez_setup.py@)
+
+  $ sudo python setup.py install
+  
+You may need to manually install "the fiveruns.dash package":http://github.com/fiveruns/dash-python first.
+  
+h2. Configuration
+
+Add @fiveruns.dash.django@ to the end of @INSTALLED_APPS@ in your @settings.py@:
+
+  INSTALLED_APPS = (
+    # ...
+    'fiveruns.dash.django'
+  )
+  
+Next you must set @DASH_TOKEN@ to a valid application token (provided at http://dash.fiveruns.com):
+
+  DASH_TOKEN = 'YOUR-APP-TOKEN'
+  
+You may also want to set the log level, at least temporarily, for debugging purposes (by default it is set to @logging.WARN@):
+
+  import logging
+  DASH_LOGGER_LEVEL = logging.DEBUG
+  
+For additional options, see the Django portions of the "Python Language Guide":http://dash.fiveruns.com/help/python.html
+
+h2. Requirements
+
+* Django (tested with Django 1.1, from svn; maynot work with previous versions)
+* "fiveruns.dash package":http://github.com/fiveruns/dash-django
+* "Python 2.5+":http://python.org (though not 3.0 compatible yet).
+* "python-aspects 1.3+":http://www.cs.tut.fi/~ask/aspects/index.shtml
