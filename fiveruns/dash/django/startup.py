@@ -38,7 +38,7 @@ def start(settings):
         raise ImproperlyConfigured, 'Error configuring fiveruns_dash.django. Is DASH_TOKEN defined?'
     if hasattr(settings, 'DASH_LOGGER_LEVEL'):
         logging.getLogger('fiveruns_dash').setLevel(settings.DASH_LOGGER_LEVEL)
-    configuration = fiveruns.dash.configure(app_token = settings.DASH_TOKEN)
+    configuration = fiveruns.dash.configure(app_token=settings.DASH_TOKEN)
     for recipe in _builtin_recipes():
         configuration.add_recipe(recipe)
     _add_framework_metadata()
@@ -80,7 +80,7 @@ def _builtin_recipes():
     # Metric: orm_util
     # TODO: Wrap higher up?
     # from django.db.models.sql import BaseQuery
-    recipe.time('orm_time', 'django.db ORM Time', wrap = BaseQuery.execute_sql)
+    recipe.time('orm_time', 'django.db ORM Time', wrap=BaseQuery.execute_sql)
 
     # Metric: db_util
     # from django.core.exceptions import ImproperlyConfigured
@@ -91,7 +91,7 @@ def _builtin_recipes():
         for name in cursor_names:
             if hasattr(django.db.backend, name):
                 cursor_class = getattr(django.db.backend, name)
-                recipe.time('db_time', 'django.db Backend Time', wrap = cursor_class.execute)
+                recipe.time('db_time', 'django.db Backend Time', wrap=cursor_class.execute)
                 break
         else:
             logger.error("Could not find Django DB backend cursor, skipping Database Utilization metric")
@@ -102,10 +102,10 @@ def _builtin_recipes():
     # from django.core.handlers.base import BaseHandler
 
     # Metric: requests
-    recipe.counter('requests', "Requests", wrap = BaseHandler.get_response)
+    recipe.counter('requests', "Requests", wrap=BaseHandler.get_response)
 
     # Metric: response_time
-    recipe.time('response_time', "Response Time", wrap = BaseHandler.get_response)
+    recipe.time('response_time', "Response Time", wrap=BaseHandler.get_response)
 
     recipe.percentage('orm_util', "django.db ORM Utilization",
                       calculation = Calculation(lambda orm, total: (orm / total) * 100.0, 'orm_time', 'response_time'))
