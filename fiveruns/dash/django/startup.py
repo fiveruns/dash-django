@@ -47,7 +47,7 @@ def start(settings):
         for recipe in settings.DASH_RECIPES:
             configuration.add_recipe(*list(recipe))
     if hasattr(settings, 'DASH_CONFIGURE_WITH'):
-      settings.DASH_CONFIGURE_WITH(configure)
+        settings.DASH_CONFIGURE_WITH(configure)
     aspects.with_wrap(_start_unless_reloading, Command.handle)
 
 def _start_unless_reloading(*args, **options):
