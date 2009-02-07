@@ -85,7 +85,6 @@ def _builtin_recipes():
     # Metric: db_util
     # from django.core.exceptions import ImproperlyConfigured
     try:
-        import django.db
         # Get the cursor class
         cursor_names = ('CursorWrapper', 'FormatStylePlaceholderCursor')
         for name in cursor_names:
@@ -107,11 +106,17 @@ def _builtin_recipes():
     # Metric: response_time
     recipe.time('response_time', "Response Time", wrap=BaseHandler.get_response)
 
+    percentage_fn = lambda x, total: (x / total) * 100.0
+
     recipe.percentage('orm_util', "django.db ORM Utilization",
-                      calculation = Calculation(lambda orm, total: (orm / total) * 100.0, 'orm_time', 'response_time'))
+                      calculation=Calculation(percentage_fn,
+                                              'orm_time',
+                                              'response_time'))
 
     recipe.percentage('db_util', "django.db Backend Utilization",
-                      calculation = Calculation(lambda db, total: (db / total) * 100.0, 'db_time', 'response_time'))
+                      calculation=Calculation(percentage_fn,
+                                              'db_time',
+                                              'response_time'))
 
     yield recipe
 
