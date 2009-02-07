@@ -1,11 +1,14 @@
 import logging, django, sys
 from django.core.exceptions import ImproperlyConfigured
+from django.core.exceptions import ImproperlyConfigured
+from django.core.handlers.base import BaseHandler
 from django.core.management.commands.runserver import Command
+from django.db.models.sql import BaseQuery
+
 import fiveruns.dash, aspects
 from fiveruns.dash.metrics import Calculation
 
 logger = logging.getLogger('fiveruns.dash.django')
-
 configuration = None
 
 def start(settings):
@@ -34,7 +37,7 @@ def start(settings):
     if not hasattr(settings, 'DASH_TOKEN'):
         raise ImproperlyConfigured, 'Error configuring fiveruns_dash.django. Is DASH_TOKEN defined?'
     if hasattr(settings, 'DASH_LOGGER_LEVEL'):
-      logging.getLogger('fiveruns_dash').setLevel(settings.DASH_LOGGER_LEVEL)
+        logging.getLogger('fiveruns_dash').setLevel(settings.DASH_LOGGER_LEVEL)
     configuration = fiveruns.dash.configure(app_token = settings.DASH_TOKEN)
     for recipe in _builtin_recipes():
         configuration.add_recipe(recipe)
@@ -76,11 +79,11 @@ def _builtin_recipes():
 
     # Metric: orm_util
     # TODO: Wrap higher up?
-    from django.db.models.sql import BaseQuery
+    # from django.db.models.sql import BaseQuery
     recipe.time('orm_time', 'django.db ORM Time', wrap = BaseQuery.execute_sql)
 
     # Metric: db_util
-    from django.core.exceptions import ImproperlyConfigured
+    # from django.core.exceptions import ImproperlyConfigured
     try:
         import django.db
         # Get the cursor class
@@ -96,7 +99,7 @@ def _builtin_recipes():
         logger.warn("Could not find Django DB backend, skipping Database Utilization metric")
         pass
 
-    from django.core.handlers.base import BaseHandler
+    # from django.core.handlers.base import BaseHandler
 
     # Metric: requests
     recipe.counter('requests', "Requests", wrap = BaseHandler.get_response)
